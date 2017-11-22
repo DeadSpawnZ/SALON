@@ -1,0 +1,85 @@
+header{
+    width: 100%;
+    height: 150px;
+    position:absolute;
+    top: 0;
+    left: 0;
+    background-color: orange;
+}
+
+nav{
+    width: 100%;
+    height: 100px;
+    background-color: cyan;
+}
+
+ul{
+    font-size: large;
+    color: black;
+    -webkit-padding-start: 0;
+    text-align: center;
+}
+
+li{
+    width: 18%;
+    float: left;
+    background-color: lightblue;
+    margin-left: 1%;
+    margin-right: 1%;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+#view{
+    width: 100%;
+    height: available;
+    position: absolute;
+    top: 150px;
+    background-color: black;
+}
+
+/*DRAG AND DROP*/
+#drag_and_drop{
+    width: 100%;
+    background-color: yellow;
+}
+
+#tablero{
+    width: 700px;
+    height: 700px;
+    background-image: url('piso.jpg');
+    border: 1px solid black;
+}
+
+.silla{
+    width: 35px;
+    height: 35px;
+}
+
+.mesa{
+    width: 35px;
+    height: 35px;
+}
+
+.pista{
+    width: 130px;
+    height: 130px;
+}
+
+.band{
+    width: 100px;
+}
+
+.tooltip{
+    width: 70px;
+    height: 70px;
+    position: relative;
+    left: 35px;
+}
+
+.no-drag{
+    width: 100%;
+    user-drag: none; 
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+}

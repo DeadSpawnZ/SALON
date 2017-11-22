@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Proyecto Salón</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="scripts.js"></script>
+        <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <ul>
+                    <li>Inicio</li>
+                    <li>Quienes somos</li>
+                    <li>Nuestro menú</li>
+                    <li>Reservaciones</li>
+                    <li>Contacto</li>
+                </ul>
+            </nav>
+        </header>
+        <div id="view">
+            Tipo de Evento
+            <select id="tipo_de_evento">
+                <option>Graduación</option>
+                <option>Boda</option>
+                <option>Bautizo</option>
+                <option>XV años</option>
+                <option>Reunión familiar</option>
+                <option>Reunión de negocios</option>
+            </select>
+            Fecha
+            <input id="fecha" type="date"/>
+            Hora
+            <input id="hora" type="time"/>
+            Evento guardado
+            <select id="eventos_guadados">
+                <option>Elige una opcion</option>
+            </select>
+            
+            <!--DRAG AND DROP-->
+            <section id="drag_and_drop">
+                <div id="silla" class="silla" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="silla.png" alt="silla"/></div>
+                <div id="mesa" class="mesa" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="mesa.png" alt="mesa"/></div>
+                <div id="pista" class="pista" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="pista.png" alt="pista"/></div>
+                <div id="band" class="band" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="band.png" alt="band"/></div>
+                <div id="tablero" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </section>
+        </div>
+    </body>
+</html>
