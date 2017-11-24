@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>Registro</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            var db;
+            window.onload = function() {
+                db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
+                db.transaction(function(tx){
+                    //tx.executeSql('drop table USUARIO');
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS USUARIO(nombre TEXT, contra TEXT)');
+                });
+            };
+            function registra(){
+                var usuario = document.getElementById("usuario").value;
+                var contra = document.getElementById("contra").value;
+                var con_contra = document.getElementById("con_contra").value;
+                if(con_contra == contra){
+                    db.transaction(function(tx){
+                        tx.executeSql("INSERT INTO USUARIO(nombre,contra) VALUES (?,?)", [usuario, contra]);
+                    });
+                    alert("Registro exitoso");
+                }else{
+                    alert("Las contraseñas son diferentes");
+                }
+            }
+        </script>
+    </head>
+    
+    <body>
+        <input id="usuario" type="text" placeholder="Usuario" required/><br/>
+        <input id="contra" type="password" placeholder="Contraseña" required/><br/>
+        <input id="con_contra" type="password" placeholder="Confirma contraseña" required/><br/>
+        <button onclick="registra()">Aceptar</button>
+        <a href="login.html">Volver</a>
+    </body>
+</html>

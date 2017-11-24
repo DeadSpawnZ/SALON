@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login OP</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            .background{
+                width: 100%;
+                height: 100%;
+                background-image: url('imagenes/back.jpg');
+                background-size: 100% auto;
+                position: absolute;
+                filter: blur(3px);
+                top: 0px;
+                left: 0px;
+                z-index: -1;
+            }
+            
+            .filtro{
+                width: 100%;
+                height: 100%;
+                background-color: #1e1e1e;
+                opacity: 0.7;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                z-index: -1;
+            }
+            
+            .campos{
+                width: 350px;
+                height: 400px;
+                background-color: transparent;
+                border: 3px solid black;
+                border-radius: 5px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+            
+            input{
+                width: 120px;
+                height: 30px;
+                color: white;
+                font-size: 14px;
+                font-style: italic;
+                background-color: #141414;
+                border: 1px solid black;
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+                box-shadow: inset 3px 3px 15px 5px black;
+                opacity: 0.6;
+                margin: 5px;
+                padding-left: 15px;
+                -webkit-transition: width 1s ease-in-out;
+                transition: width 1s ease-in-out;
+            }
+
+            input:focus {
+                width: 160px;
+            }
+            
+            i{
+                color: white;
+                opacity: 0.7;
+                margin-top: 0px;
+            }
+            
+            button{
+                width: 120px;
+                height: 30px;
+                color: white;
+                font-size: 14px;
+                border-radius: 3px;
+                background-color: #999900;
+                border: 0px;
+            }
+            
+            .cl{
+                width: 30px;
+                height: 30px;
+                background-color: black;
+                display: inline-block;
+                padding: 3px;
+                margin-top: 0px;
+            }
+            
+            ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+                color: gray;
+            }
+            a{
+                color: #009999;
+            }
+        </style>
+        <script>
+            var db;
+            window.onload = function() {
+                db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
+                db.transaction(function(tx){
+                    //tx.executeSql('drop table USUARIO');
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS USUARIO(nombre TEXT, contra TEXT)');
+                });
+            };
+            function inicia_sesion(){
+                var usuario = document.getElementById("usuario").value;
+                var contra = document.getElementById("contra").value;
+                db.transaction(function(tx){
+                    tx.executeSql('SELECT * FROM USUARIO WHERE nombre=? AND contra=?', [usuario, contra], function (tx, results) {
+                        var len = results.rows.length;
+                        if(len > 0){
+                            redirecciona();
+                        }else{
+                            alert("Usuario no registrado");
+                        }
+                    }, null);
+                    
+                });   
+            }
+            
+            function redirecciona(){
+               window.location.href = "index.html";
+            }
+            setTimeout ("redirecciona()", 2000);
+        </script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <div class="background"></div>
+        <div class="filtro"></div>
+        <div class="campos">
+            <div class="cl"><i class="fa fa-envelope-o"></i></div><input id="usuario" type="text" placeholder="Usuario"/><br/>
+            <div class="cl"><i class="fa fa-lock"></i></div><input id="contra" type="password" placeholder="Contraseña"/><br/>
+            <button onclick="inicia_sesion()">Iniciar sesión</button><br/>
+            <a href="registro.html">Registrate</a>
+        </div>
+    </body>
+</html>

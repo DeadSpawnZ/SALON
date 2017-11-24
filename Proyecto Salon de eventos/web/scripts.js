@@ -1,19 +1,3 @@
-window.onload = function() {
-    //tableroOP();
-};
-
-//Funcion prohibida del diablo
-/*function tableroOP(){
-    var tablero = document.getElementById("tablero");
-    for(var i = 0; i < 400; i++){
-        var zelda = document.createElement("div");
-        zelda.setAttribute("class", "zelda");
-        zelda.setAttribute("ondrop", "drop(event)");
-        zelda.setAttribute("ondragover", "allowDrop(event)");
-        tablero.appendChild(zelda);
-    }
-}*/
-
 function allowDrop(ev) {
     ev.preventDefault();
 }
@@ -73,11 +57,13 @@ function posiciona(idElemento, targetOP, ev){
     var mueble = {
         x: 0,
         y: 0,
-        id: ""
+        id: "",
+        tipo: ""
     };
     mueble.x = x;
     mueble.y = y;
     mueble.id = idElemento;
+    mueble.tipo = document.getElementById(idElemento).getAttribute("class");
     revisa_y_agrega(mueble);
 
     document.getElementById(idElemento).style.position = "absolute";
