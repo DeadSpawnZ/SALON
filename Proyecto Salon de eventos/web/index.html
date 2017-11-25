@@ -22,21 +22,23 @@
             </nav>
         </header>
         <div id="view">
+            <p class="texto">Nombre del evento</p>
+            <input id="n_evento" type="text" required/>
             <p class="texto">Tipo de Evento</p>
             <select id="tipo_de_evento">
-                <option>Graduación</option>
-                <option>Boda</option>
-                <option>Bautizo</option>
-                <option>XV años</option>
-                <option>Reunión familiar</option>
-                <option>Reunión de negocios</option>
+                <option value="graduacion">Graduación</option>
+                <option value="boda">Boda</option>
+                <option value="bautizo">Bautizo</option>
+                <option value="xv">XV años</option>
+                <option value="reunion_f">Reunión familiar</option>
+                <option value="reunion_n">Reunión de negocios</option>
             </select>
             <p class="texto">Fecha</p>
-            <input id="fecha" type="date"/>
+            <input id="fecha" type="date" required/>
             <p class="texto">Hora</p>
-            <input id="hora" type="time"/>
+            <input id="hora" type="time" required/>
             <p class="texto">Evento guardado</p>
-            <select id="eventos_guadados">
+            <select id="eventos_guardados">
                 <option>Elige una opcion</option>
             </select>
             
@@ -48,6 +50,9 @@
                 <div id="band" class="band" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="band.png" alt="band"/></div>
                 <div id="tablero" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
             </section>
+            
+            <button onclick="guarda_evento()">Guardar evento</button>
+            <button onclick="reserva_evento()">Reservar</button>
         </div>
     </body>
 </html>

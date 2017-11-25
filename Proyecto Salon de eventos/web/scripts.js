@@ -99,3 +99,78 @@ function tooltip(elem){
     document.getElementById(elem.id).appendChild(tooltip);
     
 }
+
+var db;
+window.onload = function(){
+    db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
+    db.transaction(function(tx){
+        //tx.executeSql('drop table USUARIO');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS USUARIO(nombre TEXT, contra TEXT)');
+    });
+    db.transaction(function(tx){
+        tx.executeSql('CREATE TABLE IF NOT EXISTS EVENTO(ide INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT,eventoo TEXT,FOREIGN KEY (nombre) REFERENCES USUARIO (nombre))');
+    });
+    
+    db.transaction(function(tx){
+        tx.executeSql('CREATE TABLE IF NOT EXISTS DIST(ide INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT,x INTEGER,y INTEGER,tipo TEXT,elem_id TEXT,FOREIGN KEY (nombre) REFERENCES USUARIO (nombre))');
+    });
+    
+    db.transaction(function(tx){
+        tx.executeSql('SELECT * FROM EVENTO WHERE nombre=?', [sessionStorage.getItem('usuario')], function (tx, results) {
+            var len = results.rows.length, i;
+            if(len > 0){
+                alert("si hay");
+                var select = document.getElementById("eventos_guardados");
+                for(i = 0; i < len; i++){
+                    var option = document.createElement("option");
+                    option.setAttribute("id", results.rows.item(i).eventoo);
+                    option.setAttribute("onclick", "carga_evento()");
+                    option.innerHTML = results.rows.item(i).eventoo;
+                    select.appendChild(option);
+                }
+            }else{
+                alert("no hay");
+            }
+        }, null);
+    });
+    
+    
+};
+
+function guarda_evento(){
+    var tipo_evento = document.getElementById("tipo_de_evento").value;
+    var fecha = document.getElementById("fecha").value; 
+    var hora = document.getElementById("hora").value;
+    var nombre = document.getElementById("n_evento").value;
+    db.transaction(function(tx){
+        tx.executeSql("INSERT INTO EVENTO(nombre,eventoo) VALUES (?,?)", [sessionStorage.getItem('usuario'), nombre]);
+    });
+    db.transaction(function(tx){
+        for(var i = 0; i < muebles.length; i++){
+            console.log(muebles[i].x+" "+muebles[i].tipo+" "+muebles[i].id);
+            tx.executeSql("INSERT INTO DIST(nombre,x,y,tipo,elem_id) VALUES (?,?,?,?,?)", [sessionStorage.getItem('usuario'), muebles[i].x, muebles[i].y, muebles[i].tipo, muebles[i].id]);
+        }
+    });
+}
+
+function reserva_evento(){
+    alert("gg está reservado :)");
+}
+
+function carga_evento(){
+    db.transaction(function(tx){
+        tx.executeSql('SELECT * FROM DIST INNER JOIN USUARIO WHERE DIST.nombre = USUARIO.nombre AND DIST.nombre=?', [sessionStorage.getItem('usuario')], function (tx, results) {
+            var len = results.rows.length;
+            if(len > 0){
+                //CREAR LOS MUEBLES DINAMICAMENTE
+                //results.rows.item(i).
+            }else{
+                alert("No hay evento?");
+            }
+        }, null);
+    });
+}
+
+function crea_muebles(){
+    //modificar contador de los ide;
+}

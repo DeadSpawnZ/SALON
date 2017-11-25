@@ -96,7 +96,7 @@
         </style>
         <script>
             var db;
-            window.onload = function() {
+            window.onload = function(){
                 db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
                 db.transaction(function(tx){
                     //tx.executeSql('drop table USUARIO');
@@ -110,7 +110,8 @@
                     tx.executeSql('SELECT * FROM USUARIO WHERE nombre=? AND contra=?', [usuario, contra], function (tx, results) {
                         var len = results.rows.length;
                         if(len > 0){
-                            redirecciona();
+                            sessionStorage.setItem('usuario', usuario);
+                            //redirecciona();
                         }else{
                             alert("Usuario no registrado");
                         }
@@ -120,7 +121,7 @@
             }
             
             function redirecciona(){
-               window.location.href = "index.html";
+                //window.location.href = "index.html";
             }
             setTimeout ("redirecciona()", 2000);
         </script>

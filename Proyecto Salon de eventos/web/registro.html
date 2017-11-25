@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script>
             var db;
-            window.onload = function() {
+            window.onload = function(){
                 db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
                 db.transaction(function(tx){
                     //tx.executeSql('drop table USUARIO');
