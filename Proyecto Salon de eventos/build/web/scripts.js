@@ -124,12 +124,12 @@ window.onload = function(){
                 for(i = 0; i < len; i++){
                     var option = document.createElement("option");
                     option.setAttribute("id", results.rows.item(i).eventoo);
-                    option.setAttribute("onclick", "carga_evento()");
+                    //option.setAttribute("onclick", "carga_evento()");
                     option.innerHTML = results.rows.item(i).eventoo;
                     select.appendChild(option);
                 }
             }else{
-                alert("no hay");
+                alert("Tu usuario aún no tiene eventos guardados");
             }
         }, null);
     });
@@ -163,7 +163,22 @@ function carga_evento(){
             var len = results.rows.length;
             if(len > 0){
                 //CREAR LOS MUEBLES DINAMICAMENTE
-                //results.rows.item(i).
+                for(var i = 0; i < len; i++){
+                    var img = document.createElement("img");
+                    img.setAttribute("class","no-drag");
+                    img.setAttribute("src",results.rows.item(i).tipo+".png");
+                    img.setAttribute("alt",results.rows.item(i).tipo);
+                    var div = document.createElement("div");
+                    div.setAttribute("id", results.rows.item(i).elem_id);
+                    div.setAttribute("class", results.rows.item(i).tipo);
+                    div.style.position = "absolute";
+                    div.style.left = results.rows.item(i).x+"px";
+                    div.style.top = results.rows.item(i).y+"px";
+                    div.appendChild(img);
+                    var tablero = document.getElementById("tablero");
+                    tablero.appendChild(div);
+                }
+                oculta();
             }else{
                 alert("No hay evento?");
             }
@@ -171,6 +186,10 @@ function carga_evento(){
     });
 }
 
-function crea_muebles(){
-    //modificar contador de los ide;
+function oculta(){
+    //document.getElementById("silla").style.display = "none";
+    //document.getElementById("mesa").style.display = "none";
+    //document.getElementById("band").style.display = "none";
+    // document.getElementById("pista").style.display = "none";
+    document.getElementById("guardar").disabled = true;
 }

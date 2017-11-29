@@ -8,9 +8,20 @@
         <script src="scripts.js"></script>
         <script src="//code.jquery.com/jquery-1.12.4.js"></script>
         <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+            
+window.onscroll= function() {myFunction()};
+
+function myFunction() {
+  if(document.scrollTop >= 50){
+      alert("lol");
+  }
+}
+
+        </script>
     </head>
     <body>
-        <header>
+        <header id="header">
             <nav>
                 <ul>
                     <li>Inicio</li>
@@ -22,37 +33,42 @@
             </nav>
         </header>
         <div id="view">
-            <p class="texto">Nombre del evento</p>
-            <input id="n_evento" type="text" required/>
-            <p class="texto">Tipo de Evento</p>
-            <select id="tipo_de_evento">
-                <option value="graduacion">Graduación</option>
-                <option value="boda">Boda</option>
-                <option value="bautizo">Bautizo</option>
-                <option value="xv">XV años</option>
-                <option value="reunion_f">Reunión familiar</option>
-                <option value="reunion_n">Reunión de negocios</option>
-            </select>
-            <p class="texto">Fecha</p>
-            <input id="fecha" type="date" required/>
-            <p class="texto">Hora</p>
-            <input id="hora" type="time" required/>
-            <p class="texto">Evento guardado</p>
-            <select id="eventos_guardados">
-                <option>Elige una opcion</option>
-            </select>
-            
+            <div class="forma">
+                <p class="texto">Nombre del evento</p>
+                <input id="n_evento" type="text" required/>
+                <p class="texto">Tipo de Evento</p>
+                <select id="tipo_de_evento">
+                    <option value="graduacion">Graduación</option>
+                    <option value="boda">Boda</option>
+                    <option value="bautizo">Bautizo</option>
+                    <option value="xv">XV años</option>
+                    <option value="reunion_f">Reunión familiar</option>
+                    <option value="reunion_n">Reunión de negocios</option>
+                </select>
+                <p class="texto">Fecha</p>
+                <input id="fecha" type="date" required/>
+                <p class="texto">Hora</p>
+                <input id="hora" type="time" required/><br/>
+                <p class="texto">Evento guardado</p>
+                <select id="eventos_guardados" onchange="carga_evento()">
+                    <option>Elige una opcion</option>
+                </select>
+                <br/><br/>
+                <button id="guardar" onclick="guarda_evento()">Guardar evento</button>
+                <button onclick="reserva_evento()">Reservar</button>
+            </div>
             <!--DRAG AND DROP-->
             <section id="drag_and_drop">
-                <div id="silla" class="silla" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="silla.png" alt="silla"/></div>
-                <div id="mesa" class="mesa" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="mesa.png" alt="mesa"/></div>
-                <div id="pista" class="pista" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="pista.png" alt="pista"/></div>
-                <div id="band" class="band" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="band.png" alt="band"/></div>
-                <div id="tablero" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                <div class="left">
+                    <div id="silla" class="silla" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="silla.png" alt="silla"/></div>
+                    <div id="mesa" class="mesa" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="mesa.png" alt="mesa"/></div>
+                    <div id="pista" class="pista" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="pista.png" alt="pista"/></div>
+                    <div id="band" class="band" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="band.png" alt="band"/></div>
+                </div>
+                <div class="right">
+                    <div id="tablero" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                </div>
             </section>
-            
-            <button onclick="guarda_evento()">Guardar evento</button>
-            <button onclick="reserva_evento()">Reservar</button>
         </div>
     </body>
 </html>
