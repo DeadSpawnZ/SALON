@@ -97,15 +97,48 @@ function tooltip(elem){
     tooltip.setAttribute("placeholder", "Escribe un invitado por linea");
     tooltip.setAttribute("class","tooltip");
     tooltip.setAttribute("onBlur","unfocus(this)");
-    tooltip.setAttribute("id",elem.id+"tool");
+    tooltip.setAttribute("id",elem.id+"_tool");
+    if(mesas.length > 0){
+        for(var i = 0; i < mesas.length; i++){
+            if(mesas[i].elem_id === elem.id){
+                tooltip.value = mesas[i].content;
+            }
+        }
+    }
     document.getElementById(elem.id).appendChild(tooltip);
 }
+
+var mesas = [];
 function unfocus(elem){
     var content = elem.value;
-    
+    var elem_id = elem.id.substring(0, elem.id.indexOf("_"));
+    var mesa = {
+        elem_id: elem_id,
+        content: content
+    };
+    revisa_mesas(mesa);
     elem.style.display = "none";
 }
 
+function revisa_mesas(mesa){ 
+    if(mesas.length > 0){
+        var bomba = false;
+        for(var i = 0; i < mesas.length; i++){
+            if(mesas[i].elem_id === mesa.elem_id){
+                bomba = true;
+                mesas[i].content = mesa.content;
+            }
+        }
+        if(!bomba){
+            mesas.push(mesa);
+            console.log(mesas);
+        }else{
+            //cuando mueven uno que ya existe
+        }
+    }else{
+        mesas.push(mesa);
+    }
+}
 
 var db;
 window.onload = function(){
@@ -119,7 +152,7 @@ window.onload = function(){
     });
     
     db.transaction(function(tx){
-        tx.executeSql('CREATE TABLE IF NOT EXISTS DIST(ide INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT,x INTEGER,y INTEGER,tipo TEXT,elem_id TEXT,FOREIGN KEY (nombre) REFERENCES USUARIO (nombre))');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS DIST(ide INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT,x INTEGER,y INTEGER,tipo TEXT,elem_id TEXT,content TEXT,FOREIGN KEY (nombre) REFERENCES USUARIO (nombre))');
     });
     
     db.transaction(function(tx){
@@ -154,7 +187,7 @@ function guarda_evento(){
     db.transaction(function(tx){
         for(var i = 0; i < muebles.length; i++){
             console.log(muebles[i].x+" "+muebles[i].tipo+" "+muebles[i].id);
-            tx.executeSql("INSERT INTO DIST(nombre,x,y,tipo,elem_id) VALUES (?,?,?,?,?)", [sessionStorage.getItem('usuario'), muebles[i].x, muebles[i].y, muebles[i].tipo, muebles[i].id]);
+            tx.executeSql("INSERT INTO DIST(nombre,x,y,tipo,elem_id,content) VALUES (?,?,?,?,?,?)", [sessionStorage.getItem('usuario'), muebles[i].x, muebles[i].y, muebles[i].tipo, muebles[i].id, ""]);
         }
     });
 }
@@ -172,7 +205,7 @@ function carga_evento(){
                 for(var i = 0; i < len; i++){
                     var img = document.createElement("img");
                     img.setAttribute("class","no-drag");
-                    img.setAttribute("src",results.rows.item(i).tipo+".png");
+                    img.setAttribute("src","imagenes/"+results.rows.item(i).tipo+".png");
                     img.setAttribute("alt",results.rows.item(i).tipo);
                     var div = document.createElement("div");
                     div.setAttribute("id", results.rows.item(i).elem_id);

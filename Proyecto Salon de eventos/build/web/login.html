@@ -113,6 +113,9 @@
                     tx.executeSql('CREATE TABLE IF NOT EXISTS USUARIO(nombre TEXT, contra TEXT)');
                 });
             };
+            function red(){
+                location.href = "index.html";
+            }
             function inicia_sesion(){
                 var usuario = document.getElementById("usuario").value;
                 var contra = document.getElementById("contra").value;
@@ -120,20 +123,14 @@
                     tx.executeSql('SELECT * FROM USUARIO WHERE nombre=? AND contra=?', [usuario, contra], function (tx, results) {
                         var len = results.rows.length;
                         if(len > 0){
-                            alert("khe");
                             sessionStorage.setItem('usuario', usuario);
-                            redirecciona();
+                            red();
                         }else{
                             alert("Usuario no registrado");
                         }
                     }, null);
                 });   
             }
-            
-            function redirecciona(){
-                //window.location.href = "index.html";
-            }
-            setTimeout ("redirecciona()", 2000);
         </script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
