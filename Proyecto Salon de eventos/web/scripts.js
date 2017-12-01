@@ -58,7 +58,8 @@ function posiciona(idElemento, targetOP, ev){
         x: 0,
         y: 0,
         id: "",
-        tipo: ""
+        tipo: "",
+        content: ""
     };
     mueble.x = x;
     mueble.y = y;
@@ -98,45 +99,30 @@ function tooltip(elem){
     tooltip.setAttribute("class","tooltip");
     tooltip.setAttribute("onBlur","unfocus(this)");
     tooltip.setAttribute("id",elem.id+"_tool");
-    if(mesas.length > 0){
-        for(var i = 0; i < mesas.length; i++){
-            if(mesas[i].elem_id === elem.id){
-                tooltip.value = mesas[i].content;
+    if(muebles.length > 0){
+        for(var i = 0; i < muebles.length; i++){
+            if(muebles[i].id === elem.id){
+                tooltip.value = muebles[i].content;
             }
         }
     }
     document.getElementById(elem.id).appendChild(tooltip);
 }
 
-var mesas = [];
 function unfocus(elem){
     var content = elem.value;
     var elem_id = elem.id.substring(0, elem.id.indexOf("_"));
-    var mesa = {
-        elem_id: elem_id,
-        content: content
-    };
-    revisa_mesas(mesa);
+    revisa_mesa(elem_id, content);
     elem.style.display = "none";
 }
 
-function revisa_mesas(mesa){ 
-    if(mesas.length > 0){
-        var bomba = false;
-        for(var i = 0; i < mesas.length; i++){
-            if(mesas[i].elem_id === mesa.elem_id){
-                bomba = true;
-                mesas[i].content = mesa.content;
+function revisa_mesa(elem_id, content){ 
+    if(muebles.length > 0){
+        for(var i = 0; i < muebles.length; i++){
+            if(muebles[i].id === elem_id){
+                muebles[i].content = content;
             }
         }
-        if(!bomba){
-            mesas.push(mesa);
-            console.log(mesas);
-        }else{
-            //cuando mueven uno que ya existe
-        }
-    }else{
-        mesas.push(mesa);
     }
 }
 
@@ -159,7 +145,7 @@ window.onload = function(){
         tx.executeSql('SELECT * FROM EVENTO WHERE nombre=?', [sessionStorage.getItem('usuario')], function (tx, results) {
             var len = results.rows.length, i;
             if(len > 0){
-                alert("si hay");
+                alert("si hay eventos registrados en este usuario");
                 var select = document.getElementById("eventos_guardados");
                 for(i = 0; i < len; i++){
                     var option = document.createElement("option");
@@ -187,9 +173,10 @@ function guarda_evento(){
     db.transaction(function(tx){
         for(var i = 0; i < muebles.length; i++){
             console.log(muebles[i].x+" "+muebles[i].tipo+" "+muebles[i].id);
-            tx.executeSql("INSERT INTO DIST(nombre,x,y,tipo,elem_id,content) VALUES (?,?,?,?,?,?)", [sessionStorage.getItem('usuario'), muebles[i].x, muebles[i].y, muebles[i].tipo, muebles[i].id, ""]);
+            tx.executeSql("INSERT INTO DIST(nombre,x,y,tipo,elem_id,content) VALUES (?,?,?,?,?,?)", [sessionStorage.getItem('usuario'), muebles[i].x, muebles[i].y, muebles[i].tipo, muebles[i].id, muebles[i].content]);
         }
     });
+    alert("Evento guardado");
 }
 
 function reserva_evento(){
@@ -201,6 +188,7 @@ function carga_evento(){
         tx.executeSql('SELECT * FROM DIST INNER JOIN USUARIO WHERE DIST.nombre = USUARIO.nombre AND DIST.nombre=?', [sessionStorage.getItem('usuario')], function (tx, results) {
             var len = results.rows.length;
             if(len > 0){
+                muebles = [];
                 //CREAR LOS MUEBLES DINAMICAMENTE
                 for(var i = 0; i < len; i++){
                     var img = document.createElement("img");
@@ -210,19 +198,33 @@ function carga_evento(){
                     var div = document.createElement("div");
                     div.setAttribute("id", results.rows.item(i).elem_id);
                     div.setAttribute("class", results.rows.item(i).tipo);
+                    if(results.rows.item(i).tipo == "mesa"){
+                        div.setAttribute("ondblclick","tooltip(this)");
+                    }
                     div.style.position = "absolute";
                     div.style.left = results.rows.item(i).x+"px";
                     div.style.top = results.rows.item(i).y+"px";
                     div.appendChild(img);
                     var tablero = document.getElementById("tablero");
                     tablero.appendChild(div);
+                    
+                    var mueble = {
+                        x: 0,
+                        y: 0,
+                        id: results.rows.item(i).elem_id,
+                        tipo: "",
+                        content: results.rows.item(i).content
+                    };
+                    muebles.push(mueble);
                 }
+                console.log(muebles);
                 oculta();
             }else{
                 alert("No hay evento?");
             }
         }, null);
     });
+    document.getElementById("guardar").disabled = true;
 }
 
 function oculta(){
