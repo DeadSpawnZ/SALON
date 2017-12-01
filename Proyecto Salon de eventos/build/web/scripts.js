@@ -96,9 +96,16 @@ function tooltip(elem){
     tooltip.setAttribute("cols","20");
     tooltip.setAttribute("placeholder", "Escribe un invitado por linea");
     tooltip.setAttribute("class","tooltip");
+    tooltip.setAttribute("onBlur","unfocus(this)");
+    tooltip.setAttribute("id",elem.id+"tool");
     document.getElementById(elem.id).appendChild(tooltip);
-    
 }
+function unfocus(elem){
+    var content = elem.value;
+    
+    elem.style.display = "none";
+}
+
 
 var db;
 window.onload = function(){
@@ -124,7 +131,6 @@ window.onload = function(){
                 for(i = 0; i < len; i++){
                     var option = document.createElement("option");
                     option.setAttribute("id", results.rows.item(i).eventoo);
-                    //option.setAttribute("onclick", "carga_evento()");
                     option.innerHTML = results.rows.item(i).eventoo;
                     select.appendChild(option);
                 }
@@ -187,9 +193,5 @@ function carga_evento(){
 }
 
 function oculta(){
-    //document.getElementById("silla").style.display = "none";
-    //document.getElementById("mesa").style.display = "none";
-    //document.getElementById("band").style.display = "none";
-    // document.getElementById("pista").style.display = "none";
     document.getElementById("guardar").disabled = true;
 }
