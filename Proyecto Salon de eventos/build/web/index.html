@@ -6,8 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="style.css">
         <script src="scripts.js"></script>
-        <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="query1.js"></script>
+        <script src="query2.js"></script>
         <script>
             window.onscroll = function() {myFunction();};
 
@@ -35,6 +35,7 @@
         </header>
         <div id="view">
             <div class="forma">
+				<div id='newEv'>
                 <p class="texto">Nombre del evento</p>
                 <input id="n_evento" type="text" required/>
                 <p class="texto">Tipo de Evento</p>
@@ -50,21 +51,26 @@
                 <input id="fecha" type="date" required/>
                 <p class="texto">Hora</p>
                 <input id="hora" type="time" required/><br/>
-                <p class="texto">Evento guardado</p>
+                <button id="guardar" onclick="guarda_evento()">Guardar evento</button>
+                <button>Reservar</button>
+				<br/><br/>
+				</div>
+				<div id='goEv'>
+				
+				<p class="texto">Evento guardado</p>
                 <select id="eventos_guardados" onchange="carga_evento()">
                     <option>Elige una opcion</option>
                 </select>
-                <br/><br/>
-                <button id="guardar" onclick="guarda_evento()">Guardar evento</button>
-                <button onclick="reserva_evento()">Reservar</button>
+				</div>
             </div>
+			<h2 id='hnewEv'>Distribución del evento</h2>
             <!--DRAG AND DROP-->
             <section id="drag_and_drop">
-                <div class="left">
-                    <div id="silla" class="silla" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="imagenes/silla.png" alt="silla"/></div>
-                    <div id="mesa" class="mesa" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="imagenes/mesa.png" alt="mesa"/></div>
-                    <div id="pista" class="pista" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="imagenes/pista.png" alt="pista"/></div>
-                    <div id="band" class="band" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="imagenes/band.png" alt="band"/></div>
+                <div id='cosas' class="left">
+                    <div id="silla" class="silla" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="imagenes/silla.png" alt="silla"/></div><br><br>
+                    <div id="mesa" class="mesa" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="imagenes/mesa.png" alt="mesa"/></div><br><br>
+                    <div id="pista" class="pista" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="imagenes/pista.png" alt="pista"/></div><br><br>
+                    <div id="band" class="band" draggable="true" ondragstart="drag(event)"><img class="no-drag" src="imagenes/band.png" alt="band"/></div><br>
                 </div>
                 <div class="right">
                     <div id="tablero" ondrop="drop(event)" ondragover="allowDrop(event)"></div>

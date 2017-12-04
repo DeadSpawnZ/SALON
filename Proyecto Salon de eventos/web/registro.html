@@ -20,19 +20,121 @@
                     db.transaction(function(tx){
                         tx.executeSql("INSERT INTO USUARIO(nombre,contra) VALUES (?,?)", [usuario, contra]);
                     });
-                    alert("Registro exitoso");
+					alert("Registro exitoso");
+					setTimeout(function(){location.href="login.html";}, 1000);
                 }else{
                     alert("Las contraseñas son diferentes");
                 }
             }
         </script>
+		<style>
+		 .background{
+                width: 100%;
+                height: 100%;
+                background-image: url('imagenes/back.jpg');
+                background-size: 100% auto;
+                position: absolute;
+                filter: blur(3px);
+                top: 0px;
+                left: 0px;
+                z-index: -1;
+            }
+            
+            .filtro{
+                width: 100%;
+                height: 100%;
+                background-color: #1e1e1e;
+                opacity: 0.7;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                z-index: -1;
+            }
+            
+            .campos{
+                width: 350px;
+                height: 300px;
+                background-color: rgba(19,48,66,0.5);
+                border: 1px solid rgba(19,48,66,0.8);
+                border-radius: 5px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+            
+            input{
+                width: 200px;
+                height: 30px;
+                color: white;
+                font-size: 14px;
+                font-style: italic;
+                background-color: #141414;
+                border: 1px solid black;
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+                box-shadow: inset 3px 3px 15px 5px black;
+                opacity: 0.6;
+                margin: 10px;
+                margin-left: 0px;
+                margin-top: 25px;
+                padding-left: 15px;
+                -webkit-transition: width 1s ease-in-out;
+                transition: width 1s ease-in-out;
+            }
+            
+            i{
+                color: white;
+                opacity: 0.7;
+                margin-top: 5px;
+                margin-left: 2px;
+            }
+            
+            button{
+                width: 120px;
+                height: 30px;
+                color: white;
+                font-size: 14px;
+                border-radius: 3px;
+                background-color: #999900;
+                border: 0px;
+            }
+            
+            .cl{
+                width: 30px;
+                height: 28px;
+                background-color: black;
+                display: inline-block;
+                padding: 3px;
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+                opacity: 0.8;
+            }
+            
+            ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+                color: gray;
+            }
+            
+            a{
+                color: #009999;
+				margin-left:30px;
+            }
+            
+            .center{
+                text-align: center;
+            }
+		</style>
     </head>
     
     <body>
-        <input id="usuario" type="text" placeholder="Usuario" required/><br/>
-        <input id="contra" type="password" placeholder="Contraseña" required/><br/>
-        <input id="con_contra" type="password" placeholder="Confirma contraseña" required/><br/>
-        <button onclick="registra()">Aceptar</button>
-        <a href="login.html">Volver</a>
+        <div class="background"></div>
+        <div class="filtro"></div>
+            <div class="campos">
+            <br>
+            <div class="center"><input id="usuario" type="text" placeholder="Usuario" required/><br/></div>
+            <div class="center"><input id="contra" type="password" placeholder="Contraseña" required/><br/></div>
+            <div class="center"> <input id="con_contra" type="password" placeholder="Confirma contraseña" required/><br/></div><br>
+            <div class="center"><button onclick="registra()">Aceptar</button><a href="login.html">Volver</a></div>
+        </div>
     </body>
 </html>

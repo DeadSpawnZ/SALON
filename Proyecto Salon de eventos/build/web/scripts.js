@@ -57,6 +57,7 @@ function posiciona(idElemento, targetOP, ev){
     var mueble = {
         x: 0,
         y: 0,
+		comida:"",
         id: "",
         tipo: "",
         content: ""
@@ -99,21 +100,47 @@ function tooltip(elem){
     tooltip.setAttribute("class","tooltip");
     tooltip.setAttribute("onBlur","unfocus(this)");
     tooltip.setAttribute("id",elem.id+"_tool");
+	
+	var selcomida=document.createElement("select");
+    selcomida.setAttribute("onBlur","sunfocus(this)");
+	selcomida.setAttribute("class","stooltip");
+	selcomida.setAttribute("id",elem.id+"_selc");
+	
+	var sv;
+	var comidas=["Sushi", "Pizza", "Mariscos"];
+	for (var i= 0; i<3; i++) {
+		var option = document.createElement("option");
+		option.value = comidas[i];
+		option.text = comidas[i];
+		selcomida.appendChild(option);
+	}
+	
     if(muebles.length > 0){
         for(var i = 0; i < muebles.length; i++){
             if(muebles[i].id === elem.id){
                 tooltip.value = muebles[i].content;
+				selcomida.value=muebles[i].comida;
             }
         }
     }
     document.getElementById(elem.id).appendChild(tooltip);
+	document.getElementById(elem.id).appendChild(selcomida);
 }
 
 function unfocus(elem){
     var content = elem.value;
     var elem_id = elem.id.substring(0, elem.id.indexOf("_"));
     revisa_mesa(elem_id, content);
-    elem.style.display = "none";
+    var padre = elem.parentNode;
+	padre.removeChild(elem);
+}
+
+function sunfocus(elem){
+    var comida = elem.value;
+    var elem_id = elem.id.substring(0, elem.id.indexOf("_"));
+    srevisa_mesa(elem_id, comida);
+    var padre = elem.parentNode;
+	padre.removeChild(elem);
 }
 
 function revisa_mesa(elem_id, content){ 
@@ -126,26 +153,38 @@ function revisa_mesa(elem_id, content){
     }
 }
 
+function srevisa_mesa(elem_id, comida){ 
+    if(muebles.length > 0){
+        for(var i = 0; i < muebles.length; i++){
+            if(muebles[i].id === elem_id){
+                muebles[i].comida = comida;
+            }
+        }
+    }
+}
+
 var db;
-window.onload = function(){
+window.onload = function goN(){
     db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
     db.transaction(function(tx){
         //tx.executeSql('drop table USUARIO');
         tx.executeSql('CREATE TABLE IF NOT EXISTS USUARIO(nombre TEXT, contra TEXT)');
     });
     db.transaction(function(tx){
-        tx.executeSql('CREATE TABLE IF NOT EXISTS EVENTO(ide INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT,eventoo TEXT,FOREIGN KEY (nombre) REFERENCES USUARIO (nombre))');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS EVENTO(ide INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT,eventoo TEXT,tipo TEXT,fecha TEXT,hora TEXT,FOREIGN KEY (nombre) REFERENCES USUARIO (nombre))');
     });
     
     db.transaction(function(tx){
-        tx.executeSql('CREATE TABLE IF NOT EXISTS DIST(ide INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT,x INTEGER,y INTEGER,tipo TEXT,elem_id TEXT,content TEXT,FOREIGN KEY (nombre) REFERENCES USUARIO (nombre))');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS DIST(ide INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT,x INTEGER,y INTEGER,tipo TEXT,elem_id TEXT,content TEXT, comida TEXT, FOREIGN KEY (nombre) REFERENCES USUARIO (nombre))');
     });
     
     db.transaction(function(tx){
         tx.executeSql('SELECT * FROM EVENTO WHERE nombre=?', [sessionStorage.getItem('usuario')], function (tx, results) {
             var len = results.rows.length, i;
             if(len > 0){
-                alert("si hay eventos registrados en este usuario");
+                alert("Ya has creado tu evento disponible");
+                    $("#newEv").addClass("ocultar");
+                    $("#cosas").addClass("ocultar");
                 var select = document.getElementById("eventos_guardados");
                 for(i = 0; i < len; i++){
                     var option = document.createElement("option");
@@ -154,7 +193,8 @@ window.onload = function(){
                     select.appendChild(option);
                 }
             }else{
-                alert("Tu usuario aún no tiene eventos guardados");
+                    $("#goEv").addClass("ocultar");
+                alert("Tienes un evento disponible para crear");
             }
         }, null);
     });
@@ -167,21 +207,23 @@ function guarda_evento(){
     var fecha = document.getElementById("fecha").value; 
     var hora = document.getElementById("hora").value;
     var nombre = document.getElementById("n_evento").value;
-    db.transaction(function(tx){
-        tx.executeSql("INSERT INTO EVENTO(nombre,eventoo) VALUES (?,?)", [sessionStorage.getItem('usuario'), nombre]);
-    });
-    db.transaction(function(tx){
-        for(var i = 0; i < muebles.length; i++){
-            console.log(muebles[i].x+" "+muebles[i].tipo+" "+muebles[i].id);
-            tx.executeSql("INSERT INTO DIST(nombre,x,y,tipo,elem_id,content) VALUES (?,?,?,?,?,?)", [sessionStorage.getItem('usuario'), muebles[i].x, muebles[i].y, muebles[i].tipo, muebles[i].id, muebles[i].content]);
-        }
-    });
-    alert("Evento guardado");
+    if(muebles.length>0){
+        db.transaction(function(tx){
+            tx.executeSql("INSERT INTO EVENTO(nombre,eventoo,tipo,fecha,hora) VALUES (?,?,?,?,?)", [sessionStorage.getItem('usuario'), nombre, tipo_evento, fecha, hora]);
+        });
+        db.transaction(function(tx){
+            for(var i = 0; i < muebles.length; i++){
+                console.log(muebles[i].x+" "+muebles[i].tipo+" "+muebles[i].id);
+                tx.executeSql("INSERT INTO DIST(nombre,x,y,tipo,elem_id,content,comida) VALUES (?,?,?,?,?,?,?)", [sessionStorage.getItem('usuario'), muebles[i].x, muebles[i].y, muebles[i].tipo, muebles[i].id, muebles[i].content,muebles[i].comida]);
+            }
+        });
+        alert("Evento guardado");
+    }else{
+        alert("Tu evento está vacío");
+    }
+    setTimeout(function(){location.reload();}, 2000);
 }
 
-function reserva_evento(){
-    alert("gg está reservado :)");
-}
 
 function carga_evento(){
     db.transaction(function(tx){
@@ -213,18 +255,31 @@ function carga_evento(){
                         y: 0,
                         id: results.rows.item(i).elem_id,
                         tipo: "",
-                        content: results.rows.item(i).content
+                        content: results.rows.item(i).content,
+                        comida: results.rows.item(i).comida
                     };
                     muebles.push(mueble);
                 }
                 console.log(muebles);
                 oculta();
             }else{
-                alert("No hay evento?");
+                alert("Error al cargar la distribución del evento");
             }
         }, null);
     });
-    document.getElementById("guardar").disabled = true;
+    db.transaction(function(tx){
+        tx.executeSql('SELECT * FROM EVENTO INNER JOIN USUARIO WHERE EVENTO.nombre = USUARIO.nombre AND EVENTO.nombre=?', [sessionStorage.getItem('usuario')], function (tx, results) {
+            var n_evento = results.rows.item(0).eventoo;
+            var tipo = results.rows.item(0).tipo;
+            var fecha = results.rows.item(0).fecha;
+            var hora = results.rows.item(0).hora;
+            document.getElementById("tipo_de_evento").value = tipo;
+            document.getElementById("fecha").value = fecha;
+            document.getElementById("hora").value = hora;
+            document.getElementById("n_evento").value = n_evento;
+        }, null);
+    });
+    //document.getElementById("guardar").disabled = true;
 }
 
 function oculta(){
